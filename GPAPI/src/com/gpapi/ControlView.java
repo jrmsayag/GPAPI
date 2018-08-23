@@ -39,6 +39,7 @@ package com.gpapi;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Observable;
@@ -142,6 +143,7 @@ public final class ControlView implements Observer {
     
     private JPanel bestIndividualGenotypeTab;
     private JPanel bestIndividualPhenotypeTab;
+    private JPanel populationsOverviewTab;
     
     private final TimeSeriesCollection fitnessSeriesCollection = new TimeSeriesCollection();
     private final HashMap<Population,TimeSeries> maxFitnessSeries = new HashMap<Population,TimeSeries>();
@@ -222,6 +224,9 @@ public final class ControlView implements Observer {
 				bestIndividualPhenotypeTab = new JPanel();
 				bestIndividualPhenotypeTab.setLayout(new BorderLayout());
 				
+				populationsOverviewTab = new JPanel();
+				populationsOverviewTab.setLayout(new BorderLayout());
+				
 				JFreeChart fitnessChart = ChartFactory.createXYLineChart(
 						null, 
 						"Generation", 
@@ -276,6 +281,7 @@ public final class ControlView implements Observer {
 				simultationOutputTabs.setBorder(BorderFactory.createTitledBorder("Simulation output"));
 				simultationOutputTabs.addTab("Best individual genotype", bestIndividualGenotypeTab);
 				simultationOutputTabs.addTab("Best individual phenotype", bestIndividualPhenotypeTab);
+				simultationOutputTabs.addTab("Populations overview", populationsOverviewTab);
 				simultationOutputTabs.addTab("Raw fitness evolution", fitnessEvolutionTab);
 				simultationOutputTabs.addTab("Execution cost evolution", executionCostEvolutionTab);
 				simultationOutputTabs.addTab("Structural complexity evolution", structuralComplexityEvolutionTab);
@@ -423,6 +429,14 @@ public final class ControlView implements Observer {
     		
     		JPanel genotypeView = statistics.getBestIndividualFor(statistics.getBestPopulation()).getEggCell().getNucleus().getView();
     		JPanel phenotypeView = algorithm.getFitnessFunction().getPhenotypeView(statistics.getBestIndividualFor(statistics.getBestPopulation()));
+    		
+    		ArrayList<JPanel> populationViews = new ArrayList<JPanel>();
+    		for(Population population : statistics.getPopulations()){
+    			JPanel populationView = algorithm.getFitnessFunction().getPopulationView(population);
+    			if(populationView != null)
+    				populationViews.add(populationView);
+    		}
+    		
     		SwingUtilities.invokeLater(() ->
     			{
     				if(genotypeView != currentGenotypeView){
@@ -434,10 +448,24 @@ public final class ControlView implements Observer {
     				
     				if(phenotypeView != currentPhenotypeView){
     					bestIndividualPhenotypeTab.removeAll();
-    		    		bestIndividualPhenotypeTab.add(phenotypeView, BorderLayout.CENTER);
+    					
+    					if(phenotypeView != null)
+    						bestIndividualPhenotypeTab.add(phenotypeView, BorderLayout.CENTER);
+    					
     		    		bestIndividualPhenotypeTab.validate();
     					currentPhenotypeView = phenotypeView;
     				}
+    				
+    				populationsOverviewTab.removeAll();
+    				if(populationViews.size() == 1)
+    					populationsOverviewTab.add(populationViews.get(0), BorderLayout.CENTER);
+    				else if(populationViews.size() > 1){
+    					JTabbedPane populationOverviewTabs = new JTabbedPane();
+    					for(int j = 0; j < populationViews.size(); j++)
+    						populationOverviewTabs.addTab("Population-" + j, populationViews.get(j));
+    					populationsOverviewTab.add(populationOverviewTabs, BorderLayout.CENTER);
+    				}
+    				populationsOverviewTab.validate();
     			});
     	}
     }

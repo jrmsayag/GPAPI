@@ -39,6 +39,7 @@ package com.gpapi.algorithm.fitnessfunction;
 
 import javax.swing.JPanel;
 
+import com.gpapi.Population;
 import com.gpapi.individuals.EvolvedIndividual;
 import com.gpapi.individuals.EvolvedIndividual.RawFitnessType;
 
@@ -46,7 +47,12 @@ import com.gpapi.individuals.EvolvedIndividual.RawFitnessType;
 
 public interface FitnessFunctionInterface {
 	
-	public JPanel getPhenotypeView(EvolvedIndividual individual);
+	public default JPanel getPhenotypeView(EvolvedIndividual individual){
+		return null;
+	}
+	public default JPanel getPopulationView(Population population){
+		return null;
+	}
 	
 	
 	public default void modulateWithExecutionCost(EvolvedIndividual individual, double coeff){
