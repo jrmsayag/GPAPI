@@ -85,7 +85,7 @@ public class Main {
 	
 	public static void main(String[] args) throws InvocationTargetException, InterruptedException, ExecutionException, IOException {
 		ArrayList<AbstractNode> globalExternalNodes = new ArrayList<AbstractNode>();
-			globalExternalNodes.add(new Constant(RealValue.create()));
+			globalExternalNodes.add(new Constant(RealValue.createWithGenerationParameters(0.0, 1.0, 0.1), 1.0));
 		
 		ArrayList<AbstractNode> globalInternalNodes = new ArrayList<AbstractNode>();
 			globalInternalNodes.add(new Sum());

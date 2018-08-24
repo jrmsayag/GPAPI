@@ -48,6 +48,7 @@ public abstract class AbstractType implements Serializable {
 	public abstract void mutate();
 	
 	public abstract AbstractType copy();
+	public abstract AbstractType generateNew();
 	
 	public final boolean isTheSameAs(AbstractType type){
 		return type != null && getClass().equals(type.getClass());

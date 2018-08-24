@@ -76,6 +76,12 @@ public final class BooleanValue extends AbstractType {
 	public final BooleanValue copy() {
 		return createMutable(getValue(), isMutable());
 	}
+	@Override
+	public final BooleanValue generateNew(){
+		BooleanValue newValue = copy();
+		newValue.mutate();
+		return newValue;
+	}
 	
 	@Override
 	public final String toString(){

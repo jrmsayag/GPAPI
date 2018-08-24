@@ -75,6 +75,10 @@ public final class DigitsList extends AbstractType {
 		return new DigitsList(getValue());
 	}
 	@Override
+	public final DigitsList generateNew(){
+		return copy();
+	}
+	@Override
 	public final String toString(){
 		String s = "[";
 		if(!getValue().isEmpty()){

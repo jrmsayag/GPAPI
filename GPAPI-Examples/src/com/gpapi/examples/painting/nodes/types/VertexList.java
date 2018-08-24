@@ -75,6 +75,10 @@ public final class VertexList extends AbstractType {
 		return new VertexList(getValue());
 	}
 	@Override
+	public final VertexList generateNew(){
+		return copy();
+	}
+	@Override
 	public final String toString(){
 		String s = "[";
 		if(!getValue().isEmpty()){

@@ -96,6 +96,10 @@ public final class Vertex extends AbstractType {
 		return new Vertex(getX(), getY(), getIncrement());
 	}
 	@Override
+	public final Vertex generateNew(){
+		return new Vertex(getIncrement());
+	}
+	@Override
 	public final String toString(){
 		return String.format("V(%d,%d)", getX(), getY());
 	}

@@ -53,16 +53,37 @@ public final class RealValue extends AbstractType {
 		this.value = value;
 	}
 	
-	private final double increment;
+	private double increment;
 	public final double getIncrement() {
 		return increment;
+	}
+	public void setIncrement(double increment) {
+		this.increment = increment;
+	}
+	
+	private double newValue;
+	public double getNewValue() {
+		return newValue;
+	}
+	public void setNewValue(double newValue) {
+		this.newValue = newValue;
+	}
+	
+	private double newIncrement;
+	public double getNewIncrement() {
+		return newIncrement;
+	}
+	public void setNewIncrement(double newIncrement) {
+		this.newIncrement = newIncrement;
 	}
 	
 	
 	
-	private RealValue(double value, double increment){
+	private RealValue(double value, double increment, double newValue, double newIncrement){
 		setValue(value);
-		this.increment = increment;
+		setIncrement(increment);
+		setNewValue(newValue);
+		setNewIncrement(newIncrement);
 	}
 	
 	
@@ -74,7 +95,11 @@ public final class RealValue extends AbstractType {
 	
 	@Override
 	public final RealValue copy() {
-		return createWithIncrement(getValue(), getIncrement());
+		return createWithGenerationParameters(getValue(), getIncrement(), getNewValue(), getNewIncrement());
+	}
+	@Override
+	public final RealValue generateNew(){
+		return createWithGenerationParameters(getNewValue(), getNewIncrement(), getIncrement());
 	}
 	
 	@Override
@@ -98,6 +123,25 @@ public final class RealValue extends AbstractType {
 		return createWithIncrement(0.0, increment);
 	}
 	public static final RealValue createWithIncrement(double value, double increment){
-		return new RealValue(value, increment);
+		return createWithGenerationParameters(value, increment, value, increment);
+	}
+	public static final RealValue createWithGenerationParameters(
+			double newValue,
+			double newIncrement,
+			double increment
+	){
+		double value = newValue;
+		if(newIncrement > 0.0)
+			value += ThreadLocalRandom.current().nextDouble(-newIncrement, newIncrement);
+		
+		return createWithGenerationParameters(value, increment, newValue, newIncrement);
+	}
+	public static final RealValue createWithGenerationParameters(
+			double value,
+			double increment,
+			double newValue,
+			double newIncrement
+	){
+		return new RealValue(value, increment, newValue, newIncrement);
 	}
 }

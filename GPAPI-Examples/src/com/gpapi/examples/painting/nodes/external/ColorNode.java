@@ -81,7 +81,9 @@ public final class ColorNode extends AbstractNode {
 	
 	@Override
 	public final ColorNode mutatedCopy(GeneticOperatorInterface geneticOperator) {
-		return generateNew();
+		Color colorCopy = getReturnType().copy();
+		colorCopy.mutate();
+		return new ColorNode(colorCopy);
 	}
 	
 	
@@ -92,9 +94,7 @@ public final class ColorNode extends AbstractNode {
 	
 	@Override
 	public final ColorNode generateNew(){
-		Color colorCopy = (Color) execute().getValue();
-		colorCopy.mutate();
-		return new ColorNode(colorCopy);
+		return new ColorNode(getReturnType().generateNew());
 	}
 	
 	@Override

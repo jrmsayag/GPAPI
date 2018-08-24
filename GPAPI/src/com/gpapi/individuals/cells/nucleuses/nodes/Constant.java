@@ -63,13 +63,23 @@ public final class Constant extends AbstractNode {
 		return returnType;
 	}
 	
+	private final double valueMutationProba;
+	public double getValueMutationProba() {
+		return valueMutationProba;
+	}
 	
-	
-	public Constant(AbstractType returnType){
+
+
+	public Constant(AbstractType returnType, double valueMutationProba){
 		if(returnType == null)
 			throw new NullPointerException("A return type must be specified!");
 		else
 			this.returnType = returnType;
+		
+		this.valueMutationProba = valueMutationProba;
+	}
+	public Constant(AbstractType returnType){
+		this(returnType, 0.5);
 	}
 	
 	
@@ -81,23 +91,23 @@ public final class Constant extends AbstractNode {
 	
 	@Override
 	public final AbstractNode mutatedCopy(GeneticOperatorInterface geneticOperator){
-		if(ThreadLocalRandom.current().nextBoolean())
-			return generateNew();
-		else
+		if(ThreadLocalRandom.current().nextDouble() < valueMutationProba){
+			AbstractType value = getReturnType().copy();
+			value.mutate();
+			return new Constant(value, getValueMutationProba());
+		} else
 			return super.mutatedCopy(geneticOperator);
 	}
 	
 
 	@Override
 	public final Constant copy() {
-		return new Constant(getReturnType().copy());
+		return new Constant(getReturnType().copy(), getValueMutationProba());
 	}
 	
 	@Override
 	public final Constant generateNew(){
-		AbstractType value = execute().getValue();
-		value.mutate();
-		return new Constant(value);
+		return new Constant(getReturnType().generateNew(), getValueMutationProba());
 	}
 
 	@Override

@@ -81,7 +81,9 @@ public final class VertexNode extends AbstractNode {
 	
 	@Override
 	public final VertexNode mutatedCopy(GeneticOperatorInterface geneticOperator) {
-		return generateNew();
+		Vertex vertexCopy = getReturnType().copy();
+		vertexCopy.mutate();
+		return new VertexNode(vertexCopy);
 	}
 	
 
@@ -92,9 +94,7 @@ public final class VertexNode extends AbstractNode {
 	
 	@Override
 	public final VertexNode generateNew(){
-		Vertex vertexCopy = (Vertex) execute().getValue();
-		vertexCopy.mutate();
-		return new VertexNode(vertexCopy);
+		return new VertexNode(getReturnType().generateNew());
 	}
 
 	@Override

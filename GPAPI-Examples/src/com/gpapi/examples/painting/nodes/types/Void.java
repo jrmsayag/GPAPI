@@ -54,6 +54,10 @@ public final class Void extends AbstractType {
 		return new Void();
 	}
 	@Override
+	public final Void generateNew() {
+		return copy();
+	}
+	@Override
 	public final String toString(){
 		return "VOID";
 	}

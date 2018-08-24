@@ -120,6 +120,10 @@ public final class Color extends AbstractType {
 		return new Color(getR(), getG(), getB(), getA(), getIncrement());
 	}
 	@Override
+	public final Color generateNew(){
+		return new Color(getA(), getIncrement());
+	}
+	@Override
 	public final String toString(){
 		return String.format("C(%d,%d,%d,%d)", r, g, b, a);
 	}
