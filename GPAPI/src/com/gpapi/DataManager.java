@@ -37,6 +37,8 @@
 
 package com.gpapi;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,6 +47,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import com.gpapi.individuals.EvolvedIndividual;
@@ -56,47 +60,90 @@ public final class DataManager {
 	public static final void saveIndividual(EvolvedIndividual individual, String to) throws IOException {
 		genericSave(individual, to);
 	}
-	public static final EvolvedIndividual loadIndividual(String from) 
-			throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static final byte[] saveIndividual(EvolvedIndividual individual) throws IOException {
+		return genericSave(individual);
+	}
+	public static final EvolvedIndividual loadIndividual(String from) throws IOException, ClassNotFoundException {
+		return (EvolvedIndividual) genericLoad(from);
+	}
+	public static final EvolvedIndividual loadIndividual(byte[] from) throws IOException, ClassNotFoundException {
 		return (EvolvedIndividual) genericLoad(from);
 	}
 	
 	public static final void savePopulation(Population population, String to) throws IOException {
 		genericSave(population, to);
 	}
-	public static final Population loadPopulation(String from) 
-			throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static final byte[] savePopulation(Population population) throws IOException {
+		return genericSave(population);
+	}
+	public static final Population loadPopulation(String from) throws IOException, ClassNotFoundException {
+		return (Population) genericLoad(from);
+	}
+	public static final Population loadPopulation(byte[] from) throws IOException, ClassNotFoundException {
 		return (Population) genericLoad(from);
 	}
 	
 	public static final void saveGenerationSnapshot(GenerationSnapshot snapshot, String to) throws IOException {
 		genericSave(snapshot, to);
 	}
-	public static final GenerationSnapshot loadGenerationSnapshot(String from)
-			throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static final byte[] saveGenerationSnapshot(GenerationSnapshot snapshot) throws IOException {
+		return genericSave(snapshot);
+	}
+	public static final GenerationSnapshot loadGenerationSnapshot(String from) throws IOException, ClassNotFoundException {
+		return (GenerationSnapshot) genericLoad(from);
+	}
+	public static final GenerationSnapshot loadGenerationSnapshot(byte[] from) throws IOException, ClassNotFoundException {
 		return (GenerationSnapshot) genericLoad(from);
 	}
 	
 	public static final void saveGenerationStatistics(GenerationStatistics statistics, String to) throws IOException {
 		genericSave(statistics, to);
 	}
-	public static final GenerationStatistics loadGenerationStatistics(String from)
-			throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static final byte[] saveGenerationStatistics(GenerationStatistics statistics) throws IOException {
+		return genericSave(statistics);
+	}
+	public static final GenerationStatistics loadGenerationStatistics(String from) throws IOException, ClassNotFoundException {
+		return (GenerationStatistics) genericLoad(from);
+	}
+	public static final GenerationStatistics loadGenerationStatistics(byte[] from) throws IOException, ClassNotFoundException {
 		return (GenerationStatistics) genericLoad(from);
 	}
 	
 	public static final void genericSave(Serializable object, String to) throws IOException {
-		FileOutputStream fout = new FileOutputStream(to);
-		ObjectOutputStream out = new ObjectOutputStream(fout);
-		out.writeObject(object);
-		out.close();
+		
+		Files.createDirectories(Paths.get(to).toAbsolutePath().getParent());
+		
+		try(
+				FileOutputStream fout = new FileOutputStream(to);
+				ObjectOutputStream out = new ObjectOutputStream(fout);
+		){
+			out.writeObject(object);
+		}
 	}
-	public static final Object genericLoad(String from) 
-			throws FileNotFoundException, IOException, ClassNotFoundException {
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream(from));
-		Object object = in.readObject();
-		in.close();
-		return object;
+	public static final byte[] genericSave(Serializable object) throws IOException {
+		try(
+				ByteArrayOutputStream fout = new ByteArrayOutputStream();
+				ObjectOutputStream out = new ObjectOutputStream(fout);
+		){
+			out.writeObject(object);
+			return fout.toByteArray();
+		}
+	}
+	public static final Object genericLoad(String from) throws IOException, ClassNotFoundException {
+		try(
+				FileInputStream fin = new FileInputStream(from);
+				ObjectInputStream in = new ObjectInputStream(fin);
+		){
+			return in.readObject();
+		}
+	}
+	public static final Object genericLoad(byte[] from) throws IOException, ClassNotFoundException {
+		try(
+				ByteArrayInputStream fin = new ByteArrayInputStream(from);
+				ObjectInputStream in = new ObjectInputStream(fin);
+		){
+			return in.readObject();
+		}
 	}
 	
 	/**
