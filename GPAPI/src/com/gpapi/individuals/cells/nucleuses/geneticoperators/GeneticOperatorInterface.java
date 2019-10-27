@@ -479,18 +479,20 @@ public interface GeneticOperatorInterface extends Serializable {
 	 * @return
 	 */
 	public default AbstractNode chooseNodeIn(List<AbstractNode> potentialNodes, AbstractType returnType){
-		if(potentialNodes.isEmpty())
-			return null;
 		
-		int randomizer = ThreadLocalRandom.current().nextInt(potentialNodes.size());
-		
-		for(int i = 0; i < potentialNodes.size(); i++){
-			AbstractNode node = potentialNodes.get((i + randomizer) % potentialNodes.size());
-			if(node.getReturnType().isTheSameAs(returnType))
-				return node;
+		List<AbstractNode> suitableNodes = new ArrayList<>();
+		for(AbstractNode node : potentialNodes) {
+			if(node.getReturnType().isTheSameAs(returnType)) {
+				suitableNodes.add(node);
+			}
 		}
 		
-		return null;
+		if(suitableNodes.isEmpty()) {
+			return null;
+		} else {
+			int index = ThreadLocalRandom.current().nextInt(suitableNodes.size());
+			return suitableNodes.get(index);
+		}
 	}
 	
 	
@@ -504,19 +506,25 @@ public interface GeneticOperatorInterface extends Serializable {
 	 * 			The chosen function, or null if none was found.
 	 */
 	public default AbstractNode findMatchingFunction(AbstractNode sourceNode){
-		if(sourceNode.getArgsTypes().isEmpty())
+		if(sourceNode.getArgsTypes().isEmpty()) {
 			return findExternalNode(sourceNode.getReturnType());
-		else {
-			List<AbstractNode> internalNodes = getInternalNodes();
-			int randomizer = ThreadLocalRandom.current().nextInt(internalNodes.size());
-			for(int i = 0; i < internalNodes.size(); i++){
-				AbstractNode node = internalNodes.get((randomizer + i) % internalNodes.size());
+		} else {
+			
+			List<AbstractNode> suitableNodes = new ArrayList<>();
+			for(AbstractNode node : getInternalNodes()) {
 				if(node.getReturnType().isTheSameAs(sourceNode.getReturnType())){
-					if(node.argsTypesMatchRequestedTypes(sourceNode.getArgsTypes()))
-						return node.copy();
+					if(node.argsTypesMatchRequestedTypes(sourceNode.getArgsTypes())) {
+						suitableNodes.add(node);
+					}
 				}
 			}
-			throw new RuntimeException("No node matching " + sourceNode + " found !");
+			
+			if(suitableNodes.isEmpty()) {
+				throw new RuntimeException("No node matching " + sourceNode + " found !");
+			} else {
+				int index = ThreadLocalRandom.current().nextInt(suitableNodes.size());
+				return suitableNodes.get(index).copy();
+			}
 		}
 	}
 }
