@@ -65,6 +65,11 @@ public final class Population implements Collection<EvolvedIndividual>, Serializ
 	
 	private static final long serialVersionUID = -6578949620252336483L;
 	
+	private final int index;
+	public final int getIndex() {
+		return index;
+	}
+
 	private int targetSize = 0;
 	public final int getTargetSize() {
 		return targetSize;
@@ -77,7 +82,7 @@ public final class Population implements Collection<EvolvedIndividual>, Serializ
 	
 	
 	
-	public Population(EvolvedIndividual initIndividual, int targetSize){
+	public Population(EvolvedIndividual initIndividual, int targetSize, int index){
 		if(initIndividual == null && targetSize > 0)
 			throw new NullPointerException("An initial individual must be specified!");
 		
@@ -85,8 +90,11 @@ public final class Population implements Collection<EvolvedIndividual>, Serializ
 			individuals.add(initIndividual.generateNew());
 		
 		this.targetSize = targetSize;
+		this.index = index;
 	}
-	public Population(){}
+	public Population(){
+		this.index = 0;
+	}
 	
 	
 	@Override

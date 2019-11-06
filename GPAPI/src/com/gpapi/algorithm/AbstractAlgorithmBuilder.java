@@ -129,7 +129,7 @@ public abstract class AbstractAlgorithmBuilder<T extends AbstractAlgorithmBuilde
 		
 		populations = new ArrayList<Population>(nPopulations);
 		for(int i = 0; i < nPopulations; i++)
-			populations.add(new Population(initIndividual, populationsSize));
+			populations.add(new Population(initIndividual, populationsSize, i));
 	}
 	protected AbstractAlgorithmBuilder(int generations, List<Population> populations) {
 		if(generations < 2)
