@@ -38,8 +38,10 @@
 package com.gpapi.algorithm.generalpurposeoperators;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -55,19 +57,32 @@ import com.gpapi.individuals.EvolvedIndividual;
 public final class Colonization implements GeneralPurposeOperatorInterface {
 	
 	private final double colonizationRate;
-	
+	public double getColonizationRate() {
+		return colonizationRate;
+	}
+
 	private final int minColonizationInterval;
-	
+	public int getMinColonizationInterval() {
+		return minColonizationInterval;
+	}
+
 	private final NaturalSelectionStrategyInterface colonizatorsSelectionStrategy;
 	
 	private final NaturalSelectionStrategyInterface survivorsSelectionStrategy;
 	
 	private final StagnationDetectorInterface stagnationDetector;
-	
+	public final StagnationDetectorInterface getStagnationDetector() {
+		return stagnationDetector;
+	}
+
+
 	private final HashMap<Population,Integer> lastColonizationDates = new HashMap<Population,Integer>();
+	public final Map<Population, Integer> getLastColonizationDates() {
+		return Collections.unmodifiableMap(lastColonizationDates);
+	}
 	
-	
-	
+
+
 	public Colonization(
 			double colonizationRate, 
 			int minColonizationInterval, 

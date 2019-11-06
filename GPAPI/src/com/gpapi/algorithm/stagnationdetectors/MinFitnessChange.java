@@ -67,13 +67,25 @@ import com.gpapi.Population;
 public final class MinFitnessChange implements StagnationDetectorInterface {
 	
 	private final int nIntervals;
-	
+	public final int getnIntervals() {
+		return nIntervals;
+	}
+
 	private final int maxIntervalsStagnating;
-	
+	public final int getMaxIntervalsStagnating() {
+		return maxIntervalsStagnating;
+	}
+
 	private final double stagnationThreshold;
-	
+	public final double getStagnationThreshold() {
+		return stagnationThreshold;
+	}
+
 	private final int intervalsLength;
-	
+	public final int getIntervalsLength() {
+		return intervalsLength;
+	}
+
 	private final HashMap<Population,LinkedList<Double>> bestFitnessHistories = new HashMap<Population,LinkedList<Double>>();
 	
 	private final HashMap<Population,Integer> lastSufficientChangeDates = new HashMap<Population,Integer>();
